@@ -17,16 +17,23 @@ You can adjust different parameters and choose different types of splitters.
 By pasting a text file, you can apply the splitter to that text and see the resulting splits.
 You are also shown a code snippet that you can copy and use in your application
 
-## Hosted App
-
-To use the hosted app, head to [https://langchain-text-splitter.streamlit.app/](https://langchain-text-splitter.streamlit.app/)
-
 ## Running locally
 
 To run locally, first set up the environment by cloning the repo and running:
 
 ```shell
-pip install -r requirements
+pip install -r requirements.txt
+```
+Download Spacy dependencies (for Mac Apple Silicon)
+```shell
+pip install -U pip setuptools wheel
+pip install -U 'spacy[apple]'
+python -m spacy download en_core_web_sm
+```
+
+Download NLTK dependencies 
+```shell
+python -m nltk.downloader all
 ```
 
 Then, run the Streamlit app with:

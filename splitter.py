@@ -1,5 +1,5 @@
 import streamlit as st
-from langchain.text_splitter import RecursiveCharacterTextSplitter, CharacterTextSplitter, Language
+from langchain.text_splitter import RecursiveCharacterTextSplitter, CharacterTextSplitter,SpacyTextSplitter,NLTKTextSplitter,HTMLHeaderTextSplitter , Language
 import code_snippets as code_snippets
 import tiktoken
 
@@ -36,7 +36,7 @@ with col3:
         "Length Function", ["Characters", "Tokens"]
     )
 
-splitter_choices = ["RecursiveCharacter", "Character"] + [str(v) for v in Language]
+splitter_choices = ["RecursiveCharacter", "Character", "Spacy","NLTK","HTMLHeader"] + [str(v) for v in Language]
 
 with col4:
     splitter_choice = st.selectbox(
@@ -72,6 +72,24 @@ elif splitter_choice == "RecursiveCharacter":
         length_function=length_function_str
     )
 
+elif splitter_choice == "Spacy":
+    import_text = code_snippets.SPACY.format(
+        chunk_size=chunk_size,
+        chunk_overlap=chunk_overlap,
+        length_function=length_function_str
+    )
+
+elif splitter_choice == "NLTK":
+    import_text = code_snippets.NLTK.format(
+        chunk_size=chunk_size,
+        chunk_overlap=chunk_overlap
+    )
+elif splitter_choice == "HTMLHeader":
+    import_text = code_snippets.HTML_HEADER.format(
+        chunk_size=chunk_size,
+        chunk_overlap=chunk_overlap,
+        length_function=length_function_str
+    )
 elif "Language." in splitter_choice:
     import_text = code_snippets.LANGUAGE.format(
         chunk_size=chunk_size,
@@ -92,13 +110,28 @@ if st.button("Split Text"):
     # Choose splitter
     if splitter_choice == "Character":
         splitter = CharacterTextSplitter(separator = "\n\n",
-                                         chunk_size=chunk_size, 
+                                         chunk_size=chunk_size,
                                          chunk_overlap=chunk_overlap,
                                          length_function=length_function)
     elif splitter_choice == "RecursiveCharacter":
-        splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, 
+        splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size,
                                                   chunk_overlap=chunk_overlap,
                                          length_function=length_function)
+    elif splitter_choice == "Spacy":
+        splitter = SpacyTextSplitter(chunk_size=chunk_size,
+                                     chunk_overlap=chunk_overlap,
+                                     length_function=length_function)
+    elif splitter_choice == "NLTK":
+        splitter = NLTKTextSplitter(chunk_size=chunk_size,
+                                    chunk_overlap=chunk_overlap)
+    elif splitter_choice == "HTMLHeader":
+        headers_to_split_on = [
+            ("h1", "Header 1"),
+            ("h2", "Header 2"),
+            ("h3", "Header 3"),
+            ("h4", "Header 4"),
+        ]
+        splitter = HTMLHeaderTextSplitter(headers_to_split_on=headers_to_split_on)
     elif "Language." in splitter_choice:
         language = splitter_choice.split(".")[1].lower()
         splitter = RecursiveCharacterTextSplitter.from_language(language,

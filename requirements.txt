@@ -1,3 +1,6 @@
 tiktoken==0.4.0
-langchain==0.0.222
+langchain==0.0.329
 streamlit==1.25.0
+spacy
+nltk
+lxml
